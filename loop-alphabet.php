@@ -1,25 +1,6 @@
  /**
  * Alternate "loop" to display posts in blog style.
  */
-<?php
-get_header();
-?>
-
-<div id="content">
-<ul>
-<?php
-// we add this, to show all posts in our
-// Glossary sorted alphabetically
-if (is_category('Glossary')) 
-{
-$args = array( 'posts_per_page' => -1, 'orderby'=> 'title', 'order' => 'ASC' );
-$glossaryposts = get_posts( $args ); 
-}
-foreach( $glossaryposts as $post ) :	setup_postdata($post); 
- ?>
-<li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
-<?php endforeach; ?>
-</ul>
 
 	<?php
 	
@@ -31,13 +12,13 @@ foreach( $glossaryposts as $post ) :	setup_postdata($post);
 	
 	if ($bunyad_loop->have_posts()):
 	
-		$months = array();
+		$titles = array();
 		while ($bunyad_loop->have_posts()) {
 			
 			$bunyad_loop->the_post();
 			
-			$month = get_the_date('F, Y');
-			$months[$month][] = $post;
+			$first_letter = substr(get_the_title(),0,1); /** <-- format so only first letter of venue is returned */
+			$titles[$first_letter][] = $post;
 			
 		}
 		
@@ -53,10 +34,10 @@ foreach( $glossaryposts as $post ) :	setup_postdata($post);
 	
 	<div <?php Bunyad::markup()->attribs('loop', $attribs); ?>>
 	
-	<?php foreach ($months as $month => $the_posts): ?>
+	<?php foreach ($titles as $title => $the_posts): ?>
 	
-		<div class="month" data-month="<?php echo esc_attr($month); ?>">
-			<span class="heading"><?php echo esc_html($month); ?></span>
+		<div class="month" data-month="<?php echo esc_attr($first_letter); ?>">
+			<span class="heading"><?php echo esc_html($first_letter); ?></span>
 			
 			<div class="posts">
 		
